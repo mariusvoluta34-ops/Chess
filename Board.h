@@ -6,9 +6,10 @@
 
 using namespace std;
 
-enum Player{
-      WHITE_PLAYER,
-      BLACK_PLAYER
+enum Player
+{
+    WHITE_PLAYER,
+    BLACK_PLAYER
 };
 
 class Board
@@ -22,12 +23,15 @@ private:
     bool isEmpty(int row, int collumn);
     bool isWhitePiece(string piece);
     bool isBlackPiece(string piece);
-    bool isPathClear(int fromRow, int fromCollumn, int toRow, int toCollumn, Player player);
+    bool isOwnPiece(string piece, Player player);
+    bool isEnemyPiece(string piece, Player player);
+    bool isPathClear(int fromRow, int fromCollumn, int toRow, int toCollumn);
+    bool isLegalPawnMove(int fromRow, int fromCollumn, int toRow, int toCollumn, Player player);
     bool isLegalRookMove(int fromRow, int fromCollumn, int toRow, int toCollumn);
     bool isLegalBishopMove(int fromRow, int fromCollumn, int toRow, int toCollumn);
-    bool isLegalQueenMove(int fromRow,int fromCollumn, int toRow, int toCollumn);
+    bool isLegalQueenMove(int fromRow, int fromCollumn, int toRow, int toCollumn);
     bool isLegalKnightMove(int fromRow, int fromCollumn, int toRow, int toCollumn);
-
+    bool isLegalKingMove(int fromRow, int fromCollumn, int toRow, int toCollumn);
 
 public:
     Board();

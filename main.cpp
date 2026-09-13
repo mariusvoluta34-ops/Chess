@@ -1,6 +1,4 @@
 #include <iostream>
-#include <string>
-#include <iomanip>
 #include <windows.h>
 #include "Board.h"
 
@@ -10,7 +8,7 @@ int main()
 {
     SetConsoleOutputCP(CP_UTF8);
     Board chessBoard;
-    Player currentPlayer=WHITE_PLAYER;
+    Player currentPlayer = WHITE_PLAYER;
     char fromLetter;
     int fromNumber;
     char toLetter;
@@ -19,8 +17,8 @@ int main()
     {
         chessBoard.printBoard();
         cout << endl;
-        cout << "Enter your move" << endl; // e 2 e 4//
-        cout << "Enter q to quit the game loser" << endl;
+        cout << (currentPlayer == WHITE_PLAYER ? "White" : "Black") << " move" << endl;
+        cout << "Enter q to quit the game" << endl;
         cout << "Move:";
         cin >> fromLetter;
         if (fromLetter == 'q')
@@ -30,34 +28,16 @@ int main()
         cin >> fromNumber >> toLetter >> toNumber;
         Coordinate from(fromLetter, fromNumber);
         Coordinate to(toLetter, toNumber);
-        if (chessBoard.movePiece(from, to))
+        if (chessBoard.movePiece(from, to, currentPlayer))
         {
-            cout << "Brilliant move." << endl;
+            cout << "Move complete." << endl;
+            currentPlayer = currentPlayer == WHITE_PLAYER ? BLACK_PLAYER : WHITE_PLAYER;
         }
         else
         {
-            cout << "You are retarted iqlet." << endl;
+            cout << "Illegal move." << endl;
         }
     }
-    else
-    {
-        cout<<"Black Ai turn."<<endl;
-        cout<<"Ai is broken bruh."<<endl;
-        cout<<"Just enter black move manually"<<endl;
-        cout<<"Move:";
-        cin>>fromLetter>>fromNumber>>toLetter>>toNumber;
-        Coordinate from(fromLetter, fromNumber);
-        Coordinate to(toLetter, toNumber);
-        if(chessBoard.movePiece(from, to, BLACK_PLAYER))
-        {
-            cout<<"Black move done."<<endl;
-            currentPlayer=WHITE_PLAYER;
-        }
-        else{
-            cout<<"Hoooly illegal move"<<endl;
-        }
-    }
+    cout << "Game over." << endl;
+    return 0;
 }
-cout << "GG goodluck next time" << endl;
-
-return 0;
