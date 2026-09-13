@@ -6,17 +6,6 @@ enum Color
     WHITE,
     BLACK
 };
-Color color;
-
-class PieceColor
-{
-protected:
-    Color color;
-
-public:
-    PieceColor(Color c);
-    Color getColor() const;
-};
 class Piece
 {
 protected:
@@ -29,7 +18,7 @@ public:
 class Pawn : public Piece
 {
 public:
-    Pawn(Color c) : Piece(c) {}
+    Pawn(Color c);
 };
 
 #endif // PIECES_H
