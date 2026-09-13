@@ -1,0 +1,635 @@
+♟️ C++ Chess Game — Project Guide
+Phase 1 — Decide the architecture
+
+Before coding, decide what your major objects are.
+
+A reasonable starting architecture:
+
+ChessGame
+    │
+    ├── Board
+    │     └── 8 × 8 squares
+    │
+    ├── Pieces
+    │     ├── Pawn
+    │     ├── Rook
+    │     ├── Knight
+    │     ├── Bishop
+    │     ├── Queen
+    │     └── King
+    │
+    └── Player
+
+You don't necessarily need exactly these classes. The point is to separate game logic from individual pieces.
+
+For example, don't make the Queen class responsible for deciding whether the entire game is over.
+
+Phase 2 — Represent the board
+
+Start with an 8×8 board.
+
+Think about how you want to represent a square:
+
+a8 b8 c8 d8 e8 f8 g8 h8
+a7 b7 c7 d7 e7 f7 g7 h7
+...
+a1 b1 c1 d1 e1 f1 g1 h1
+
+You need to decide:
+
+How are coordinates represented?
+How do you represent an empty square?
+How do you identify piece color?
+How do you identify piece type?
+
+You could use:
+
+Piece
+ ├── color
+ └── type
+
+or inheritance:
+
+Piece
+ ├── Pawn
+ ├── Rook
+ ├── Knight
+ ├── Bishop
+ ├── Queen
+ └── King
+
+I'd recommend experimenting with both approaches before settling.
+
+Phase 3 — Implement the pieces
+
+Get all six pieces represented.
+
+Each piece should at minimum know:
+
+Color
+Position
+Type
+
+Then you need to determine how each piece moves.
+
+Don't worry about check/checkmate yet.
+
+Implement movement independently:
+
+Pawn
+White:
+  ↑
+  ↑
+  ↑
+
+Special cases:
+
+One square forward
+Two squares from starting position
+Diagonal capture
+Promotion
+Rook
+← ← ←
+  ↑
+  ↑
+  ↓
+→ → →
+Bishop
+
+Diagonal movement.
+
+Knight
+
+The weird one:
+
+  X X
+X     X
+X     X
+  X X
+
+It can jump over pieces.
+
+Queen
+
+Rook + bishop.
+
+King
+
+One square in any direction.
+
+Phase 4 — Collision and blocking
+
+Now make movement interact with the board.
+
+For sliding pieces:
+
+Rook → → → → 
+
+you need to stop when encountering another piece.
+
+For example:
+
+R R R . . . R
+
+The rook cannot move through the piece.
+
+You need to distinguish:
+
+empty square
+friendly piece
+enemy piece
+
+This is where your board logic starts becoming important.
+
+Phase 5 — Implement moves
+
+Create the concept of a move.
+
+A move should conceptually contain something like:
+
+starting square
+destination square
+piece
+captured piece
+
+Eventually you'll want additional information:
+
+promotion
+castling
+en passant
+
+Don't add all of that immediately.
+
+First make:
+
+Select piece → select destination → perform move.
+
+Phase 6 — Turn system
+
+Implement:
+
+White's turn
+    ↓
+White makes move
+    ↓
+Black's turn
+    ↓
+Black makes move
+    ↓
+White's turn
+
+You need to prevent:
+
+Moving an opponent's piece
+Moving a piece that can't move there
+Moving outside the board
+
+At this point you should have a very ugly but functional chess game.
+
+That's good.
+
+Phase 7 — Capturing
+
+When a piece moves onto an enemy piece:
+
+Before:
+
+White Queen → Black Pawn
+
+
+After:
+
+White Queen
+
+Remove the captured piece from the board.
+
+Don't actually destroy objects unnecessarily if your architecture doesn't require it. Think carefully about ownership and lifetime of pieces.
+
+This is a good point to practice proper C++ memory management.
+
+Phase 8 — Check
+
+This is where the project gets significantly more interesting.
+
+You need a function/concept equivalent to:
+
+"Is this king currently attacked?"
+
+Don't think about check as a special move.
+
+Instead:
+
+Is square X attacked by any enemy piece?
+
+Then:
+
+Is my king on an attacked square?
+
+That's check.
+
+This abstraction will become extremely useful later.
+
+Phase 9 — Legal moves
+
+This is one of the most important parts of the project.
+
+A piece might theoretically be able to move somewhere, but the move can still be illegal.
+
+Example:
+
+White King
+    ↓
+White Rook
+
+Black Rook attacks the king
+
+If White moves the rook away, the king becomes exposed.
+
+Therefore:
+
+A move is legal only if it doesn't leave your own king in check.
+
+A very useful conceptual algorithm is:
+
+Generate possible move
+        ↓
+Temporarily make move
+        ↓
+Is my king attacked?
+       / \
+     YES  NO
+      ↓    ↓
+   illegal legal
+
+This concept is extremely important if you later make a chess AI.
+
+Phase 10 — Checkmate
+
+Now you can define checkmate elegantly.
+
+King is in check
+        +
+There are ZERO legal moves
+        ↓
+     CHECKMATE
+
+Don't create a giant collection of special cases.
+
+Think in terms of:
+
+Is player in check?
+
+Does player have ANY legal move?
+
+If:
+
+check == true
+AND
+legalMoves.empty()
+
+→ checkmate.
+
+Phase 11 — Stalemate
+
+Almost the same idea:
+
+King NOT in check
+        +
+ZERO legal moves
+        ↓
+     STALEMATE
+
+This is a good example of why designing your move system properly matters.
+
+Phase 12 — Special chess rules
+
+Once normal chess works, implement the special rules.
+
+Castling
+
+Track whether:
+
+King has moved
+Relevant rook has moved
+Squares between them are empty
+King isn't currently in check
+King doesn't cross an attacked square
+King doesn't end in check
+En passant
+
+This is probably the most annoying rule to implement.
+
+You'll need to remember information about the previous move.
+
+For example:
+
+Previous move:
+Pawn moved two squares
+
+That information can make an en-passant capture available for the next move.
+
+Promotion
+
+When:
+
+Pawn reaches opposite end
+
+allow:
+
+Queen
+Rook
+Bishop
+Knight
+
+Don't automatically assume queen unless that's what you want for the first version.
+
+Phase 13 — Move history
+
+Now start storing every move.
+
+Something like:
+
+Move 1
+Move 2
+Move 3
+...
+
+This gives you:
+
+Undo
+Redo
+Move display
+Saving games
+Replaying games
+
+And you'll learn a lot about copying/restoring game state.
+
+Phase 14 — Save/load games
+
+Create your own file format initially.
+
+For example conceptually:
+
+Player: White
+Turn: Black
+
+Board:
+rnbqkbnr
+pppppppp
+........
+........
+........
+........
+PPPPPPPP
+RNBQKBNR
+
+Then save:
+
+game.chess
+
+Later you can implement FEN and PGN if you want to make the project more serious.
+
+Phase 15 — Make an actual UI
+
+Only after the underlying chess logic works.
+
+You could use:
+
+SFML
+SDL
+raylib
+
+Your UI should basically communicate with your chess engine:
+
+          UI
+           ↓
+       ChessGame
+           ↓
+         Board
+           ↓
+        Pieces
+
+The UI should not contain your chess rules.
+
+For example, clicking a square should tell the game:
+
+"The user wants to move from e2 to e4."
+
+The chess logic decides whether that's legal.
+
+This separation will save you a massive headache later.
+
+Phase 16 — Add game features
+
+Once you have a complete two-player chess game, start adding quality-of-life features:
+
+Highlight legal moves
+Highlight last move
+Highlight check
+Capture animations
+Piece animations
+Chess clock
+Move list
+Resign
+Draw
+Threefold repetition
+50-move rule
+Insufficient material
+Undo
+Redo
+Save/load
+
+At this point you have a proper chess application.
+
+Phase 17 — Make the AI
+
+This is where I'd recommend basically starting a second project inside the project.
+
+First create:
+
+Human vs Human
+
+Then:
+
+Human vs Random AI
+
+The random AI simply:
+
+Generate legal moves
+        ↓
+Choose random move
+        ↓
+Play it
+
+Then improve it.
+
+AI Level 1 — Material evaluation
+
+Give pieces values:
+
+Pawn     1
+Knight   3
+Bishop   3
+Rook     5
+Queen    9
+King    ∞
+
+Then evaluate:
+
+White material - Black material
+
+Now the AI can at least understand:
+
+"Capturing a queen is probably good."
+
+AI Level 2 — Minimax
+
+Now make the AI look ahead.
+
+Conceptually:
+
+             Current position
+              /            \
+          Move A          Move B
+          /   \            /   \
+        ...   ...        ...   ...
+
+The AI explores possible futures.
+
+White tries to maximize the evaluation.
+
+Black tries to minimize it.
+
+That's minimax.
+
+AI Level 3 — Alpha-beta pruning
+
+Your minimax tree will become enormous.
+
+So implement:
+
+alpha-beta pruning
+
+This lets you avoid evaluating branches that cannot possibly affect the final decision.
+
+This is where your algorithmic skills will really get tested.
+
+AI Level 4 — Better evaluation
+
+Instead of only:
+
+material
+
+consider:
+
+Material
++
+Piece-square tables
++
+King safety
++
+Pawn structure
++
+Mobility
++
+Center control
++
+Passed pawns
+
+Now you have an actual chess engine.
+
+AI Level 5 — Transposition table
+
+This is where your knowledge of data structures becomes very useful.
+
+Different move sequences can lead to the same position.
+
+Instead of evaluating that position repeatedly:
+
+Position X
+   ↓
+Already evaluated?
+   ↓
+YES → reuse result
+
+Use a hash table keyed by a representation of the board.
+
+Eventually you can learn about Zobrist hashing, which is commonly used for chess positions.
+
+👥 How I'd split it between you two
+
+Since you're more advanced, don't just give yourself all the hard stuff.
+
+Instead, work in pairs on the architecture, then split individual components.
+
+You
+
+Initially:
+
+Board architecture
+Move representation
+Legal-move system
+Check/checkmate
+Game-state management
+
+Later:
+
+AI
+Minimax
+Alpha-beta
+Transposition table
+Your friend
+
+Initially:
+
+Piece classes/representation
+Individual movement rules
+Board display
+Input system
+
+Later:
+
+UI
+Animations
+Save/load
+Move history
+Chess clock
+
+But swap responsibilities periodically. Your friend should eventually work on some of the harder logic too.
+
+🧱 Recommended development order
+
+I'd literally put this on your project board:
+
+[ ] Board representation
+[ ] Piece representation
+[ ] Piece movement
+[ ] Blocking
+[ ] Move execution
+[ ] Capturing
+[ ] Turn system
+[ ] Check detection
+[ ] Legal move validation
+[ ] Checkmate
+[ ] Stalemate
+[ ] Castling
+[ ] En passant
+[ ] Promotion
+[ ] Draw rules
+[ ] Move history
+[ ] Undo / redo
+[ ] Save / load
+[ ] GUI
+[ ] Move highlighting
+[ ] Chess clock
+[ ] Random AI
+[ ] Evaluation function
+[ ] Minimax
+[ ] Alpha-beta
+[ ] Better evaluation
+[ ] Transposition table
+[ ] Opening book
+
+Don't jump straight to the AI. The most valuable part of the project is actually making a clean chess engine underneath the UI.
+
+And since you're doing this as a two-person learning project, I'd strongly recommend using Git from day one, with separate branches/features. You'll get a second useful skill out of the project: actually collaborating on a non-trivial C++ codebase.
