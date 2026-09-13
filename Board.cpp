@@ -19,7 +19,7 @@ void Board::clearBoard()
     {
         for (int collumn = 0; collumn < 8; collumn++)
         {
-            board[row][collumn] = ".";
+            board[row][collumn] = " ";
         }
     }
 }
@@ -35,28 +35,39 @@ void Board::setupPieces()
         board[7][collumn] = backRow[collumn];
     }
 }
+
 void Board::printBoard()
 {
-    cout << endl;
-    cout << "          a       b       c       d       e       f       g       h" << endl;
-    cout << "    ---------------------------------------------------------------" << endl;
+    cout << "  ┌────────┬────────┬────────┬────────┬────────┬────────┬────────┬────────┐\n";
+
     for (int row = 0; row < 8; row++)
     {
         printRow(row);
+
+        if (row < 7)
+        {
+            cout << "  ├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤\n";
+        }
     }
-    cout << "    ---------------------------------------------------------------" << endl;
+
+    cout << "  └────────┴────────┴────────┴────────┴────────┴────────┴────────┴────────┘\n";
 }
+
 void Board::printRow(int row)
 {
-    for (int collumn = 0; collumn < 8; collumn++)
+    cout << "  │";
+
+    for (int column = 0; column < 8; column++)
     {
-        printSquare(row, collumn);
+        printSquare(row, column);
     }
-    cout << endl;
+
+    cout << "\n";
 }
-void Board::printSquare(int row, int collumn)
+
+void Board::printSquare(int row, int column)
 {
-    cout << setw(8) << board[row][collumn];
+    cout << setw(8) << board[row][column] << "│";
 }
 bool Board::isInsideBoard(Coordinate position)
 {

@@ -1,12 +1,14 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include <windows.h>
 #include "Board.h"
 
 using namespace std;
 
 int main()
 {
+    SetConsoleOutputCP(CP_UTF8);
     Board chessBoard;
     char fromLetter;
     int fromNumber;
