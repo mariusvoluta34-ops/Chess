@@ -6,6 +6,11 @@
 
 using namespace std;
 
+enum Player{
+      WHITE_PLAYER,
+      BLACK_PLAYER
+};
+
 class Board
 {
 private:
@@ -14,6 +19,15 @@ private:
     void setupPieces();
     void printRow(int row);
     void printSquare(int row, int collumn);
+    bool isEmpty(int row, int collumn);
+    bool isWhitePiece(string piece);
+    bool isBlackPiece(string piece);
+    bool isPathClear(int fromRow, int fromCollumn, int toRow, int toCollumn, Player player);
+    bool isLegalRookMove(int fromRow, int fromCollumn, int toRow, int toCollumn);
+    bool isLegalBishopMove(int fromRow, int fromCollumn, int toRow, int toCollumn);
+    bool isLegalQueenMove(int fromRow,int fromCollumn, int toRow, int toCollumn);
+    bool isLegalKnightMove(int fromRow, int fromCollumn, int toRow, int toCollumn);
+
 
 public:
     Board();
@@ -23,5 +37,7 @@ public:
     bool movePiece(Coordinate from, Coordinate to);
     string getPiece(Coordinate position);
     void setPiece(Coordinate position, string piece);
+    bool isLegalMove(Coordinate from, Coordinate to, Player player);
+    bool movePiece(Coordinate from, Coordinate to, Player player);
 };
 #endif

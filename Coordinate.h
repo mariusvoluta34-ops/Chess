@@ -13,5 +13,6 @@ public:
     int getNumber();
     int getRow();
     int getCollumn();
+    bool isValid();
 };
 #endif
