@@ -19,7 +19,7 @@ void Board::clearBoard()
     {
         for (int collumn = 0; collumn < 8; collumn++)
         {
-            Board[row][collumn] = ".";
+            board[row][collumn] = ".";
         }
     }
 }
@@ -60,7 +60,8 @@ void Board::printSquare(int row, int collumn)
 }
 bool Board::isInsideBoard(Coordinate position)
 {
-    return position.isValid();
+    return position.getRow() >= 0 && position.getRow() < 8 &&
+           position.getCollumn() >= 0 && position.getCollumn() < 8;
 }
 string Board::getPiece(Coordinate position)
 {
