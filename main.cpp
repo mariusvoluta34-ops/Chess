@@ -10,6 +10,7 @@ int main()
 {
     SetConsoleOutputCP(CP_UTF8);
     Board chessBoard;
+    Player currentPlayer=WHITE_PLAYER;
     char fromLetter;
     int fromNumber;
     char toLetter;
@@ -38,5 +39,25 @@ int main()
             cout << "You are retarted iqlet." << endl;
         }
     }
-    cout << "GG goodluck next time" << endl;
+    else
+    {
+        cout<<"Black Ai turn."<<endl;
+        cout<<"Ai is broken bruh."<<endl;
+        cout<<"Just enter black move manually"<<endl;
+        cout<<"Move:";
+        cin>>fromLetter>>fromNumber>>toLetter>>toNumber;
+        Coordinate from(fromLetter, fromNumber);
+        Coordinate to(toLetter, toNumber);
+        if(chessBoard.movePiece(from, to, BLACK_PLAYER))
+        {
+            cout<<"Black move done."<<endl;
+            currentPlayer=WHITE_PLAYER;
+        }
+        else{
+            cout<<"Hoooly illegal move"<<endl;
+        }
+    }
 }
+cout << "GG goodluck next time" << endl;
+
+return 0;
