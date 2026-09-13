@@ -578,8 +578,8 @@ AI
 Minimax
 Alpha-beta
 Transposition table
-Your friend
 
+Your friend
 Initially:
 
 Piece classes/representation
