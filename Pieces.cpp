@@ -7,3 +7,8 @@ Color Piece::getColor() const
 }
 
 Pawn::Pawn(Color c) : Piece(c) {}
+Rook::Rook(Color c) : Piece(c) {}
+Knight::Knight(Color c) : Piece(c) {}
+Bishop::Bishop(Color c) : Piece(c) {}
+Queen::Queen(Color c) : Piece(c) {}
+King::King(Color c) : Piece(c) {}
