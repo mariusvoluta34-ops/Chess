@@ -22,27 +22,27 @@ public:
 };
 class Rook : public Piece
 {
-    public:
+public:
     Rook(Color c);
 };
 class Knight : public Piece
 {
-    public:
+public:
     Knight(Color c);
 };
 class Bishop : public Piece
 {
-    public:
+public:
     Bishop(Color c);
 };
 class Queen : public Piece
 {
-    public:
+public:
     Queen(Color c);
 };
 class King : public Piece
 {
-    public:
+public:
     King(Color c);
 };
 
