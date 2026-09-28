@@ -35,8 +35,7 @@ int main()
             cout << "You are retarted iqlet." << endl;
         }
     }
-    else
-    {
+    else {
         cout<<"Black Ai turn."<<endl;
         cout<<"Ai is broken bruh."<<endl;
         cout<<"Just enter black move manually"<<endl;
@@ -53,7 +52,8 @@ int main()
             cout<<"Hoooly illegal move"<<endl;
         }
     }
-}
-cout << "GG goodluck next time" << endl;
+    cout<<"GG goodluck next time" << endl;
 
 return 0;
+
+}
